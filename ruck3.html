@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Rucking Calculator | Calculate Weighted Walking Metrics & Calories Burned</title>
+    <meta name="description" content="Free online rucking calculator for military, fitness enthusiasts & hikers. Calculate calories burned, pace, MET values & VO2 max benefits for weighted walks with backpacks.">
+    <meta name="keywords" content="rucking calculator, weighted walking, backpack calories, military fitness, hiking calculator, MET values, ruck march, calorie burn calculator, vo2 max training">
+    <meta name="author" content="Rucking Fitness">
+    <link rel="canonical" href="https://yourdomain.com/rucking-calculator">
+    <style>
+        :root {
+            --primary: #3a5c40; /* Military green */
+            --secondary: #6b8e23; /* Olive drab */
+            --accent: #8b4513; /* Saddle brown */
+            --light: #f5f5dc; /* Beige */
+            --dark: #2e3a1f; /* Dark olive */
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .calculator {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .unit-toggle {
+            display: flex;
+            margin-bottom: 25px;
+            background-color: var(--secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .unit-toggle button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .unit-toggle button.active {
+            background-color: var(--primary);
+        }
+        
+        button#calculate-btn {
+            background: linear-gradient(to right, var(--accent), #9c6b3a);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        button#calculate-btn:hover {
+            background: linear-gradient(to right, #7a3a10, var(--accent));
+            transform: translateY(-2px);
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: rgba(245,245,220,0.5);
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .results h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .result-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .result-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        
+        .result-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .result-unit {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .met-link {
+            color: var(--secondary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .met-link:hover {
+            color: var(--primary);
+        }
+        
+        .info-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Advanced Rucking Calculator</h1>
+            <p class="subtitle">Calculate your weighted walking performance metrics</p>
+        </header>
+        
+        <div class="calculator">
+            <div class="unit-toggle">
+                <button id="imperial-btn" class="active">Imperial (lbs, miles)</button>
+                <button id="metric-btn">Metric (kg, km)</button>
+            </div>
+            
+            <div class="form-section">
+                <div>
+                    <div class="form-group">
+                        <label for="weight">Your Weight (<span class="weight-unit">lbs</span>)</label>
+                        <input type="number" id="weight" placeholder="e.g. 180" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pack-weight">Pack Weight (<span class="weight-unit">lbs</span>)</label>
+                        <input type="number" id="pack-weight" placeholder="e.g. 30" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="age">Age (years)</label>
+                        <input type="number" id="age" placeholder="e.g. 35" min="15" max="100" value="30">
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label for="distance">Distance (<span class="distance-unit">miles</span>)</label>
+                        <input type="number" id="distance" placeholder="e.g. 5" min="0" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time">Time (minutes)</label>
+                        <input type="number" id="time" placeholder="e.g. 90" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="elevation">Elevation Gain (<span class="height-unit">ft</span>)</label>
+                        <input type="number" id="elevation" placeholder="e.g. 500" min="0" value="0">
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label for="terrain">Terrain Difficulty</label>
+                        <select id="terrain">
+                            <option value="1.0">Paved/Flat (Easy)</option>
+                            <option value="1.2">Trail/Moderate</option>
+                            <option value="1.35">Hilly/Rough</option>
+                            <option value="1.5">Mountainous (Hard)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pack-type">Pack Type</label>
+                        <select id="pack-type">
+                            <option value="1.0">Standard Backpack</option>
+                            <option value="1.05">Tactical/Military Pack</option>
+                            <option value="1.1">Weight Vest</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="calculate-btn">Calculate Rucking Metrics</button>
+            
+            <div class="results" id="results">
+                <h2>Your Rucking Performance Analysis</h2>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>Total Weight Carried</h3>
+                        <div class="result-value" id="total-weight">0</div>
+                        <div class="result-unit"><span class="weight-unit">lbs</span></div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Pace</h3>
+                        <div class="result-value" id="pace">0</div>
+                        <div class="result-unit"><span class="pace-unit">min/mile</span></div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Calories Burned</h3>
+                        <div class="result-value" id="calories">0</div>
+                        <div class="result-unit">kcal</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>MET Value</h3>
+                        <div class="result-value" id="met">0</div>
+                        <div class="result-unit">
+                            <span class="met-link" id="met-link">(intensity measure)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>VO₂ Max Benefit</h3>
+                        <div class="result-value" id="vo2">Low</div>
+                        <div class="result-unit">cardiovascular</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Equivalent Steps</h3>
+                        <div class="result-value" id="steps">0</div>
+                        <div class="result-unit">steps</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Energy Expenditure</h3>
+                        <div class="result-value" id="energy">0</div>
+                        <div class="result-unit">kJ</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Difficulty Score</h3>
+                        <div class="result-value" id="difficulty">0</div>
+                        <div class="result-unit">/10</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2>What is Rucking?</h2>
+            <p>Rucking is the military-inspired fitness activity of walking with weighted loads in a backpack. Originally used by armed forces for training, it's now popular among fitness enthusiasts for its effectiveness in building endurance and strength while burning calories.</p>
+            
+            <h3>How This Calculator Works</h3>
+            <p>Our advanced algorithm calculates:</p>
+            <ul>
+                <li><strong>Calories burned</strong> based on MET (Metabolic Equivalent) values adjusted for weight, terrain, and elevation</li>
+                <li><strong>Pace analysis</strong> to help optimize your training</li>
+                <li><strong>VO₂ Max estimation</strong> showing cardiovascular benefits</li>
+                <li><strong>Difficulty score</strong> combining all factors for workout intensity</li>
+            </ul>
+            
+            <h3>Optimizing Your Rucking Workouts</h3>
+            <p>For best results:</p>
+            <ul>
+                <li>Start with 10-15% of your body weight</li>
+                <li>Use proper military-style backpacks with hip belts</li>
+                <li>Maintain good posture - shoulders back, core engaged</li>
+                <li>Gradually increase weight and distance</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>Advanced Rucking Calculator &copy; <span id="year"></span> | 
+                <a href="#" id="privacy-link">Privacy Policy</a> | 
+                <a href="#" id="contact-link">Contact</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Unit system toggle
+            let isMetric = false;
+            const imperialBtn = document.getElementById('imperial-btn');
+            const metricBtn = document.getElementById('metric-btn');
+            
+            function updateUnitLabels() {
+                const weightUnits = document.querySelectorAll('.weight-unit');
+                const distanceUnits = document.querySelectorAll('.distance-unit');
+                const paceUnits = document.querySelectorAll('.pace-unit');
+                const heightUnits = document.querySelectorAll('.height-unit');
+                
+                if (isMetric) {
+                    weightUnits.forEach(el => el.textContent = 'kg');
+                    distanceUnits.forEach(el => el.textContent = 'km');
+                    paceUnits.forEach(el => el.textContent = 'min/km');
+                    heightUnits.forEach(el => el.textContent = 'm');
+                } else {
+                    weightUnits.forEach(el => el.textContent = 'lbs');
+                    distanceUnits.forEach(el => el.textContent = 'miles');
+                    paceUnits.forEach(el => el.textContent = 'min/mile');
+                    heightUnits.forEach(el => el.textContent = 'ft');
+                }
+            }
+            
+            imperialBtn.addEventListener('click', function() {
+                if (isMetric) {
+                    isMetric = false;
+                    imperialBtn.classList.add('active');
+                    metricBtn.classList.remove('active');
+                    updateUnitLabels();
+                }
+            });
+            
+            metricBtn.addEventListener('click', function() {
+                if (!isMetric) {
+                    isMetric = true;
+                    metricBtn.classList.add('active');
+                    imperialBtn.classList.remove('active');
+                    updateUnitLabels();
+                }
+            });
+            
+            // MET link functionality
+            document.getElementById('met-link').addEventListener('click', function() {
+                window.open('https://sites.google.com/site/compendiumofphysicalactivities/Activity-Categories/walking', '_blank');
+            });
+            
+            // Calculator function
+            document.getElementById('calculate-btn').addEventListener('click', function() {
+                // Get input values
+                let bodyWeight = parseFloat(document.getElementById('weight').value) || 0;
+                let packWeight = parseFloat(document.getElementById('pack-weight').value) || 0;
+                let distance = parseFloat(document.getElementById('distance').value) || 0;
+                const time = parseFloat(document.getElementById('time').value) || 1;
+                let elevation = parseFloat(document.getElementById('elevation').value) || 0;
+                const terrainFactor = parseFloat(document.getElementById('terrain').value);
+                const age = parseFloat(document.getElementById('age').value) || 30;
+                const gender = document.getElementById('gender').value;
+                const packType = parseFloat(document.getElementById('pack-type').value);
+                
+                // Convert to metric if needed (calculations are done in metric)
+                if (!isMetric) {
+                    bodyWeight = bodyWeight * 0.453592; // lbs to kg
+                    packWeight = packWeight * 0.453592; // lbs to kg
+                    distance = distance * 1.60934; // miles to km
+                    elevation = elevation * 0.3048; // ft to m
+                }
+                
+                // Elevation factor (additional MET for climbing)
+                const elevationFactor = 1 + (elevation / (distance * 1000) * 0.1);
+                
+                // Calculate metrics
+                const totalWeight = bodyWeight + packWeight;
+                const pace = time / distance;
+                
+                // Base MET for walking is 3.5, adjusted by weight and terrain
+                const baseMET = 3.5;
+                const weightAdjustment = 0.03 * (packWeight / 0.453592 / 10); // 3% increase per 10lbs
+                let metValue = (baseMET + weightAdjustment) * terrainFactor * elevationFactor * packType;
+                
+                // Age and gender adjustments
+                if (age > 50) metValue *= 0.98; // 2% reduction per decade over 50
+                if (gender === 'female') metValue *= 0.9; // Women typically burn ~10% fewer calories at same MET
+                
+                // Calories burned = MET * weight in kg * time in hours
+                const caloriesBurned = metValue * totalWeight * (time / 60);
+                
+                // Energy in kilojoules (1 kcal = 4.184 kJ)
+                const energyExpenditure = caloriesBurned * 4.184;
+                
+                // VO2 Max benefit estimation
+                let vo2Benefit = 'Low';
+                const pacePerMile = time / (distance / 1.60934); // min/mile regardless of input
+                const packWeightLbs = packWeight / 0.453592;
+                
+                if (pacePerMile <= 15 && packWeightLbs >= 20) vo2Benefit = 'High';
+                else if (pacePerMile <= 20 && packWeightLbs >= 10) vo2Benefit = 'Moderate';
+                
+                // Equivalent steps (approx 20 steps per calorie burned)
+                const equivalentSteps = Math.round(caloriesBurned * 20);
+                
+                // Difficulty score (0-10 scale)
+                const difficultyScore = Math.min(10, Math.round(
+                    (packWeightLbs/50 * 3) + 
+                    (pacePerMile/20 * 2) + 
+                    (terrainFactor * 2) + 
+                    (elevation/(distance*1000) * 3)
+                ));
+                
+                // Display results - convert back to imperial if needed
+                if (!isMetric) {
+                    document.getElementById('total-weight').textContent = 
+                        (totalWeight / 0.453592).toFixed(1);
+                    document.getElementById('pace').textContent = 
+                        (isFinite(pacePerMile) ? pacePerMile.toFixed(1) : '0');
+                } else {
+                    document.getElementById('total-weight').textContent = 
+                        totalWeight.toFixed(1);
+                    document.getElementById('pace').textContent = 
+                        (isFinite(pace) ? pace.toFixed(1) : '0');
+                }
+                
+                document.getElementById('calories').textContent = Math.round(caloriesBurned);
+                document.getElementById('met').textContent = metValue.toFixed(1);
+                document.getElementById('vo2').textContent = vo2Benefit;
+                document.getElementById('steps').textContent = equivalentSteps.toLocaleString();
+                document.getElementById('energy').textContent = Math.round(energyExpenditure);
+                document.getElementById('difficulty').textContent = difficultyScore;
+                
+                // Show results
+                document.getElementById('results').style.display = 'block';
+            });
+            
+            // Privacy and contact links
+            document.getElementById('privacy-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Privacy Policy: We do not store any of your personal data. All calculations are performed locally in your browser.');
+            });
+            
+            document.getElementById('contact-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Contact us at: contact@ruckingfitness.com');
+            });
+        });
+    </script>
+</body>
+</html>
