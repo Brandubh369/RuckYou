@@ -522,10 +522,17 @@
             });
             
             // Privacy and contact links
-            document.getElementById('privacy-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Privacy Policy: We do not store any of your personal data. All calculations are performed locally in your browser.');
-            });
+           // Privacy and contact links
+document.getElementById('privacy-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    alert('Privacy Policy: We do not store any of your personal data. All calculations are performed locally in your browser.');
+});
+
+document.getElementById('contact-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.location.href = "mailto:your-email@example.com"; // Replace with your actual email address
+});
+
             
         
         });
